@@ -8,7 +8,7 @@ The platform combines **automated code execution, objective test results, static
 
 ## 🎯 Vision
 
-Build a standalone **Code Assessment as a Service** platform that can be used directly by educators and students, while providing APIs and integration capabilities for educational platforms in the future.
+Build a standalone **Code Assessment as a Service** platform that can be used directly by educators and students, while remaining integration-ready for educational platforms in the future.
 
 The long-term goal is to enable learning platforms, universities, academies, and coding programs to integrate automated code assessment and AI code review directly into their existing systems.
 
@@ -16,26 +16,50 @@ The long-term goal is to enable learning platforms, universities, academies, and
 
 ## ✨ Core Features
 
+### Organization
+
+- Organization Dashboard
+- Create and manage groups
+- Manage mentors
+- Manage students
+- Monitor overall activity
+
+### Groups
+
+- Group Dashboard
+- Group Members
+- Group Feed / Announcements
+- Group Tasks
+
 ### For Mentors
 
 - Create and manage programming tasks
 - Define task requirements
 - Create customizable evaluation rubrics
-- Assign tasks to students
-- Review student submissions
-- Review and override AI-generated evaluations
+- Add optional hints
+- Set deadlines and submission types
+- View student submissions
+- Review AI-generated evaluations
+- Review and handle appeals
+- Override AI evaluations when necessary
+- Issue final scores
+- Answer student questions
 - Monitor student performance
 
 ### For Students
 
 - View assigned programming tasks
 - Read requirements and evaluation criteria
+- View hints
 - Write and submit code
 - Run code against test cases
 - Receive automated evaluation
-- View score and detailed AI feedback
+- View AI score and detailed feedback
 - Resubmit improved solutions
-- Track previous submissions
+- Track submission history
+- Submit appeals
+- Ask questions
+- View other students' solutions after the task deadline
 
 ### AI-Powered Evaluation
 
@@ -50,7 +74,15 @@ The AI evaluation engine analyzes submissions using multiple signals:
 - Maintainability
 - Overall implementation quality
 
-The AI is **not used as the sole source of truth**. Objective execution and testing are combined with AI-based qualitative evaluation.
+The AI is **not used as the sole source of truth**. Objective execution and testing are combined with AI-based qualitative evaluation, while mentors can review and override AI-generated evaluations.
+
+### Learning & Collaboration
+
+- Student questions
+- Task-aware AI assistance
+- Mentor intervention when required
+- Solutions unlocked after the deadline
+- No student leaderboard or ranking
 
 ---
 
@@ -85,45 +117,53 @@ ai-code-reviewer/
 └── LICENSE
 ```
 
-
-
 ### System Flow
 
 ```text
-                        Web Application
-                              │
-                   ┌──────────┴──────────┐
-                   ▼                     ▼
-                Mentor                Student
-                   │                     │
-            Create Task &             View Task
-             Set Rubric             Submit Code
-                   │                     │
-                   └──────────┬──────────┘
-                              ▼
+                         Web Application
+                               │
+              ┌────────────────┼────────────────┐
+              ▼                ▼                ▼
+        Organization         Mentor           Student
+              │                │                │
+        Manage Groups     Create Tasks      View Tasks
+        Manage Users      Requirements      Submit Code
+                          Rubric / Hint
+                          Deadline
+                               │
+                               ▼
                          Backend API
-                              │
-                     ┌────────┴────────┐
-                     ▼                 ▼
-                  Executor         AI Engine
-                     │                 │
-                     ▼                 ▼
-                Test Results     Score + Feedback
-                     │                 │
-                     └────────┬────────┘
-                              ▼
-                         Evaluation
-                              │
-                   ┌──────────┴──────────┐
-                   ▼                     ▼
-                Student               Mentor
-              View Result          Review / Override
-                   │
-                   ▼
-              Resubmit Code
+                               │
+                 ┌─────────────┼─────────────┐
+                 ▼             ▼             ▼
+             Database       Executor      AI Engine
+                               │             │
+                               ▼             ▼
+                          Test Results   AI Evaluation
+                                         Score + Feedback
+                               │             │
+                               └──────┬──────┘
+                                      ▼
+                                 Evaluation
+                                      │
+                           ┌──────────┴──────────┐
+                           ▼                     ▼
+                        Student               Mentor
+                     View Results        Review / Appeal
+                     Resubmit Code        Final Score
+                           │
+                           ▼
+                    Submission History
+                           │
+                           ▼
+                    Deadline Reached
+                           │
+                           ▼
+                    Solutions Unlocked
+                    (Learning, No Ranking)
 ```
 
-The backend acts as the main orchestrator between the web application, code executor, AI engine, and database.
+The Backend API acts as the main orchestrator between the Web Application, Database, Code Executor, and AI Engine.
 
 ---
 
@@ -131,7 +171,7 @@ The backend acts as the main orchestrator between the web application, code exec
 
 ### Web Application
 
-The frontend application provides the user-facing experience for mentors and students.
+The frontend application provides the user-facing experience for organizations, mentors, and students.
 
 **Planned stack:**
 
@@ -150,24 +190,27 @@ The frontend application provides the user-facing experience for mentors and stu
 The main application backend responsible for:
 
 - Authentication and authorization
-- Users and roles
-- Tasks
-- Rubrics
-- Submissions
-- Evaluations
-- Mentor reviews
-- Database operations
-- Service orchestration
-- External integrations
+- Users, Roles, Organizations & Groups
+- Tasks, Requirements, Rubrics & Hints
+- Submissions & Submission History
+- AI Evaluation Management
+- Mentor Reviews & Appeals
+- Final Score Management
+- Student Questions & Mentor Answers
+- Notifications
+- GitHub Integration
+- Database Management
+- Business Logic & Service Orchestration
+- Communication with the AI Engine and Code Executor
 
 **Planned stack:**
 
-- Python
-- FastAPI
-- PostgreSQL
-- SQLAlchemy
-- Alembic
-- JWT
+- C# / ASP.NET Core Web API
+- Entity Framework Core
+- SQL Server
+- JWT Authentication
+- Roles, Claims & Policies
+- ILogger
 
 ---
 
@@ -179,15 +222,50 @@ Responsibilities include:
 
 - Prompt management
 - LLM communication
-- Requirement evaluation
-- Rubric-based scoring
 - Code analysis
 - AST analysis
 - Static analysis
+- Requirement evaluation
+- Rubric-based evaluation
+- Test result analysis
+- AI scoring
 - Feedback generation
 - AI output validation
 
 The AI Engine does not communicate directly with the frontend or database.
+
+**Planned stack:**
+
+- Python
+- FastAPI
+- LLM
+- AST Parsing Tools
+- Static Analysis Tools
+
+---
+
+### Code Executor
+
+An isolated internal service responsible for safely executing untrusted student code and running automated tests.
+
+Responsibilities include:
+
+- Code execution
+- Test execution
+- Test result generation
+- Execution timeouts
+- CPU and memory limits
+- Restricted filesystem access
+- Restricted network access
+- Controlled execution environments
+
+The Executor does not communicate directly with the frontend. All execution requests are handled through the Backend API.
+
+**Planned stack:**
+
+- Docker
+- Isolated execution environments
+- Language-specific runtimes
 
 ---
 
@@ -232,23 +310,19 @@ This will allow external learning platforms, universities, academies, and traini
 
 The project is developed by a three-person team:
 
-- **Frontend Developer** : [**Doha Emad**](https://github.com/) 
-
+- **Frontend Developer:** [**Doha Emad**](https://github.com/Doha-2004)  
   Web application and user experience
 
-- **Backend Developer** : 
-[**Alaa Mohamed**](https://github.com/) 
-
+- **Backend Developer:** [**Alaa Mohamed**](https://github.com/Alaa304)  
   API, database, execution, and infrastructure
 
-- **AI Developer** :  [**Rawan Sotohy**](https://github.com/Rawan-Sotohy)
-
+- **AI Developer:** [**Rawan Sotohy**](https://github.com/Rawan-Sotohy)  
   AI evaluation engine, code analysis, scoring, and feedback
-
 
 ---
 
 ## 📄 License
 
 This project and its source code are proprietary.
+
 All rights reserved.
