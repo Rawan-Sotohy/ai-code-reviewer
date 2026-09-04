@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AIEvaluationResult",
+  "type": "object",
+  "required": [
+    "submission_id",
+    "ai_score",
+    "feedback",
+    "strengths",
+    "weaknesses",
+    "requirement_results",
+    "rubric_results"
+  ],
+  "properties": {
+    "submission_id": { "type": "string" },
+    "ai_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "feedback": { "type": "string" },
+    "strengths": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "weaknesses": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "requirement_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["requirement_id", "passed", "feedback"],
+        "properties": {
+          "requirement_id": { "type": "string" },
+          "passed": { "type": "boolean" },
+          "feedback": { "type": "string" }
+        }
+      }
+    },
+    "rubric_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["criterion_id", "score", "feedback"],
+        "properties": {
+          "criterion_id": { "type": "string" },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "feedback": { "type": "string" }
+        }
+      }
+    }
+  }
+}

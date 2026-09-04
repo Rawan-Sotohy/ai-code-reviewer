@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Task",
+  "type": "object",
+  "required": [
+    "id",
+    "group_id",
+    "mentor_id",
+    "title",
+    "description",
+    "requirements",
+    "start_at",
+    "deadline",
+    "submission_type",
+    "status"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "group_id": {
+      "type": "string"
+    },
+    "mentor_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "description"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "hint": {
+      "type": ["string", "null"]
+    },
+    "rubric_id": {
+      "type": ["string", "null"]
+    },
+    "start_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "submission_type": {
+      "type": "string",
+      "enum": ["EDITOR", "GITHUB", "BOTH"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["DRAFT", "PUBLISHED", "CLOSED"]
+    }
+  }
+}

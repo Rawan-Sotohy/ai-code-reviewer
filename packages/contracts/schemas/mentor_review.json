@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MentorReview",
+  "type": "object",
+  "required": [
+    "id",
+    "submission_id",
+    "mentor_id",
+    "decision",
+    "final_score",
+    "reviewed_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "submission_id": {
+      "type": "string"
+    },
+    "mentor_id": {
+      "type": "string"
+    },
+    "appeal_id": {
+      "type": ["string", "null"]
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "ACCEPTED",
+        "REJECTED",
+        "NO_APPEAL"
+      ]
+    },
+    "mentor_score": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "final_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "comment": {
+      "type": ["string", "null"]
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

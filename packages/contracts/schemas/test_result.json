@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TestResult",
+  "type": "object",
+  "required": [
+    "submission_id",
+    "total_tests",
+    "passed_tests",
+    "failed_tests",
+    "execution_time",
+    "status",
+    "tests"
+  ],
+  "properties": {
+    "submission_id": { "type": "string" },
+    "total_tests": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "passed_tests": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "failed_tests": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "execution_time": {
+      "type": "number",
+      "minimum": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": ["PASSED", "FAILED", "TIMEOUT", "ERROR"]
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "passed"],
+        "properties": {
+          "name": { "type": "string" },
+          "passed": { "type": "boolean" },
+          "expected": { "type": ["string", "null"] },
+          "actual": { "type": ["string", "null"] },
+          "error": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}
